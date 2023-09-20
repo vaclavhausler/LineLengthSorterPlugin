@@ -14,7 +14,7 @@ public class SortLinesByLengthAction extends AnAction {
         Editor editor = e.getData(CommonDataKeys.EDITOR);
 
         if (project != null && editor != null) {
-            SortLinesByLengthCodeFormatter.sortLinesByLength(editor);
+            SortLinesByLengthCodeFormatter.sortLinesByLength(project, editor);
         }
     }
 }
