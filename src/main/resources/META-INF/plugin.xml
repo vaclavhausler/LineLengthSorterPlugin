@@ -15,7 +15,7 @@
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
     Sorts selected lines by their length from the shortest to the longest. Reverses the order on already sorted lines.<br><br>
-    Select the lines you want to sort, right-click the selection and choose "Sort Lines By Length".
+    Select the lines you want to sort, right-click the selection and choose "Sort Lines By Length."
   ]]></description>
 
     <!-- Product and plugin compatibility requirements.

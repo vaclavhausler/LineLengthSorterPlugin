@@ -1,0 +1,153 @@
+package com.vhausler.sorter;
+
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
+
+/**
+ * Unit tests for the {@link SortLinesByLengthCodeFormatter} utility class.
+ * These tests validate the sorting functionality for lines of text in a document
+ * based on their length, ensuring correct behavior in both ascending and descending orders.
+ */
+public class SortLinesByLengthCodeFormatterTest extends BasePlatformTestCase {
+
+    /**
+     * Verifies that the functionality for sorting lines of a document in ascending order by length
+     * works correctly when applied using the `SortLinesByLengthCodeFormatter` utility.
+     * <p>
+     * The test performs the following steps:
+     * 1. Configures a simulated test environment by creating a mock text document with predefined input content.
+     * 2. Simulates text selection by selecting all content in the mock editor.
+     * 3. Applies the `sortLinesByLength` method from `SortLinesByLengthCodeFormatter` to sort the lines.
+     * 4. Compares the sorted content of the mock document against the expected output to ensure correctness.
+     * <p>
+     * Assertions are used to confirm that the resulting document matches the expected sorted order.
+     */
+    public void testSortLinesByLengthAscending() {
+        String input = """
+                private String test;
+                private String t;
+                private String te;""";
+
+        String expected = """
+                private String t;
+                private String te;
+                private String test;""";
+
+        // Simulate opening a file in the editor with the given content
+        myFixture.configureByText("test.txt", input);
+
+        // Select all text in the document to simulate sorting
+        myFixture.getEditor()
+                .getSelectionModel()
+                .setSelection(0, myFixture.getEditor().getDocument().getTextLength());
+
+        // Apply sorting
+        SortLinesByLengthCodeFormatter.sortLinesByLength(getProject(), myFixture.getEditor());
+
+        // Verify that the document content has been sorted correctly
+        assertEquals(expected, myFixture.getEditor().getDocument().getText());
+    }
+
+    /**
+     * This test method verifies the functionality of sorting lines of text within a document
+     * in descending order by their length using the `SortLinesByLengthCodeFormatter` utility.
+     * <p>
+     * The test performs the following:
+     * 1. Configures a test environment by simulating a text document with predefined input text.
+     * 2. Simulates selecting all text within the document editor as if the user manually selected it.
+     * 3. Applies the sorting functionality to the selected text.
+     * 4. Asserts that the sorted document content matches the expected output to ensure the descending
+     * order of line lengths is correctly implemented.
+     * <p>
+     * This method ensures that the `SortLinesByLengthCodeFormatter` operates as intended
+     * in the descending order context.
+     */
+    public void testSortLinesByLengthDescending() {
+        String input = """
+                private String t;
+                private String te;
+                private String test;""";
+
+        String expected = """
+                private String test;
+                private String te;
+                private String t;""";
+
+        // Simulate opening a file in the editor with the given content
+        myFixture.configureByText("test.txt", input);
+
+        // Select all text in the document to simulate sorting
+        myFixture.getEditor()
+                .getSelectionModel()
+                .setSelection(0, myFixture.getEditor().getDocument().getTextLength());
+
+        // Apply sorting
+        SortLinesByLengthCodeFormatter.sortLinesByLength(getProject(), myFixture.getEditor());
+
+        // Verify that the document content has been sorted correctly
+        assertEquals(expected, myFixture.getEditor().getDocument().getText());
+    }
+
+    public void testSortAnnotatedFields() {
+        String input = """
+                @Deprecated
+                private String test;
+                @Override
+                private String t;
+                @SuppressWarnings("unused")
+                private String te;""";
+
+        String expected = """
+                @Override
+                private String t;
+                @SuppressWarnings("unused")
+                private String te;
+                @Deprecated
+                private String test;""";
+
+        // Simulate opening a file in the editor with the given content
+        myFixture.configureByText("test.txt", input);
+
+        // Select all text in the document to simulate sorting
+        myFixture.getEditor()
+                .getSelectionModel()
+                .setSelection(0, myFixture.getEditor().getDocument().getTextLength());
+
+        // Apply sorting
+        SortLinesByLengthCodeFormatter.sortLinesByLength(getProject(), myFixture.getEditor());
+
+        // Verify that the document content has been sorted correctly
+        assertEquals(expected, myFixture.getEditor().getDocument().getText());
+    }
+
+    public void testSortAnnotatedFieldsDescending() {
+        String input = """
+                @Override
+                private String t;
+                @SuppressWarnings("unused")
+                private String te;
+                @Deprecated
+                private String test;""";
+
+        String expected = """
+                @Deprecated
+                private String test;
+                @SuppressWarnings("unused")
+                private String te;
+                @Override
+                private String t;""";
+
+        // Simulate opening a file in the editor with the given content
+        myFixture.configureByText("test.txt", input);
+
+        // Select all text in the document to simulate sorting
+        myFixture.getEditor()
+                .getSelectionModel()
+                .setSelection(0, myFixture.getEditor().getDocument().getTextLength());
+
+        // Apply sorting
+        SortLinesByLengthCodeFormatter.sortLinesByLength(getProject(), myFixture.getEditor());
+
+        // Verify that the document content has been sorted correctly
+        assertEquals(expected, myFixture.getEditor().getDocument().getText());
+    }
+}
