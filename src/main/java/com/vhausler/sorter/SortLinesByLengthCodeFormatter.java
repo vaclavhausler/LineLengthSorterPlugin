@@ -68,7 +68,7 @@ public class SortLinesByLengthCodeFormatter {
             if (ANNOTATION_PATTERN.matcher(line).matches()) {
                 currentAnnotations.add(line);
             } else if (!line.isEmpty()) {
-                currentField = line.trim();
+                currentField = line;
                 groups.add(new Group(new ArrayList<>(currentAnnotations), currentField));
                 currentAnnotations.clear();
             }
@@ -85,17 +85,22 @@ public class SortLinesByLengthCodeFormatter {
     private static String reconstructText(List<Group> groups) {
         StringBuilder result = new StringBuilder();
 
-        for (Group group : groups) {
+        for (int i = 0; i < groups.size(); i++) {
+            Group group = groups.get(i);
+            boolean isLastGroup = i == groups.size() - 1;
+
             for (String annotation : group.annotations) {
                 result.append(annotation).append("\n");
             }
             if (!group.fieldLine.isEmpty()) {
-                result.append(group.fieldLine).append("\n");
+                result.append(group.fieldLine);
+                if (!isLastGroup) {
+                    result.append("\n");
+                }
             }
         }
 
-        // Trim any extraneous final newline for consistency
-        return result.toString().trim();
+        return result.toString();
     }
 
     private static class Group {

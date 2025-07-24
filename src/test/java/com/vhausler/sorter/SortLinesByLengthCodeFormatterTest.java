@@ -273,4 +273,28 @@ public class SortLinesByLengthCodeFormatterTest extends BasePlatformTestCase {
         // Verify that the document content has been sorted correctly
         assertEquals(expected, myFixture.getEditor().getDocument().getText());
     }
+
+    public void testSortLinesByLengthWhitespaces() {
+        String input = "    private String t;\n" +
+                       "    private String te;\n" +
+                       "    private String test;";
+
+        String expected = "    private String test;\n" +
+                          "    private String te;\n" +
+                          "    private String t;";
+
+        // Simulate opening a file in the editor with the given content
+        myFixture.configureByText("test.txt", input);
+
+        // Select all text in the document to simulate sorting
+        myFixture.getEditor()
+                .getSelectionModel()
+                .setSelection(0, myFixture.getEditor().getDocument().getTextLength());
+
+        // Apply sorting
+        SortLinesByLengthCodeFormatter.sortLinesByLength(getProject(), myFixture.getEditor());
+
+        // Verify that the document content has been sorted correctly
+        assertEquals(expected, myFixture.getEditor().getDocument().getText());
+    }
 }

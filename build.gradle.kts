@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.vhausler"
-version = "1.0.4"
+version = "1.0.3"
 
 repositories {
     mavenCentral()
