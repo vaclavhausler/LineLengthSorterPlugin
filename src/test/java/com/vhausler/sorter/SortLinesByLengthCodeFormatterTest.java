@@ -87,6 +87,19 @@ public class SortLinesByLengthCodeFormatterTest extends BasePlatformTestCase {
         assertEquals(expected, myFixture.getEditor().getDocument().getText());
     }
 
+    /**
+     * Tests the functionality of sorting annotated fields within a text document in ascending order
+     * based on the length of their field lines using the `SortLinesByLengthCodeFormatter` utility.
+     * <p>
+     * The method simulates the following actions for verification:
+     * 1. Configures a test environment by creating a mock text document with annotated fields as input.
+     * 2. Selects all text in the mock editor to prepare for modification.
+     * 3. Applies the `sortLinesByLength` method to sort the annotated fields by their length.
+     * 4. Verifies that the resulting content matches the expected output, ensuring sorting correctness.
+     * <p>
+     * This test ensures that the sorting mechanism properly maintains annotations while reordering
+     * fields by line length.
+     */
     public void testSortAnnotatedFields() {
         String input = """
                 @Deprecated
@@ -194,6 +207,56 @@ public class SortLinesByLengthCodeFormatterTest extends BasePlatformTestCase {
                 @Override
                 private String te;
                 @SuppressWarnings("unused")
+                private String t;""";
+
+        // Simulate opening a file in the editor with the given content
+        myFixture.configureByText("test.txt", input);
+
+        // Select all text in the document to simulate sorting
+        myFixture.getEditor()
+                .getSelectionModel()
+                .setSelection(0, myFixture.getEditor().getDocument().getTextLength());
+
+        // Apply sorting
+        SortLinesByLengthCodeFormatter.sortLinesByLength(getProject(), myFixture.getEditor());
+
+        // Verify that the document content has been sorted correctly
+        assertEquals(expected, myFixture.getEditor().getDocument().getText());
+    }
+
+    public void testSortFieldsWithNewlines() {
+        String input = """
+                private String te;
+                
+                private String t;""";
+
+        String expected = """
+                private String t;
+                private String te;""";
+
+        // Simulate opening a file in the editor with the given content
+        myFixture.configureByText("test.txt", input);
+
+        // Select all text in the document to simulate sorting
+        myFixture.getEditor()
+                .getSelectionModel()
+                .setSelection(0, myFixture.getEditor().getDocument().getTextLength());
+
+        // Apply sorting
+        SortLinesByLengthCodeFormatter.sortLinesByLength(getProject(), myFixture.getEditor());
+
+        // Verify that the document content has been sorted correctly
+        assertEquals(expected, myFixture.getEditor().getDocument().getText());
+    }
+
+    public void testSortFieldsWithNewlinesDescending() {
+        String input = """
+                private String t;
+                
+                private String te;""";
+
+        String expected = """
+                private String te;
                 private String t;""";
 
         // Simulate opening a file in the editor with the given content

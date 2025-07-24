@@ -32,7 +32,7 @@ public class SortLinesByLengthCodeFormatter {
                     if (selectedText != null) {
                         String formattedText = formatText(selectedText);
 
-                        if (formattedText.equals(selectedText)) {
+                        if (formattedText.equals(selectedText.replace("\n\n", "\n"))) {
                             formattedText = formatText(selectedText, true);
                         }
 
@@ -65,11 +65,9 @@ public class SortLinesByLengthCodeFormatter {
         String currentField;
 
         for (String line : lines) {
-            if (isBlank(line)) {
-                groups.add(Group.blankLine());
-            } else if (ANNOTATION_PATTERN.matcher(line).matches()) {
+            if (ANNOTATION_PATTERN.matcher(line).matches()) {
                 currentAnnotations.add(line);
-            } else {
+            } else if (!line.isEmpty()) {
                 currentField = line.trim();
                 groups.add(new Group(new ArrayList<>(currentAnnotations), currentField));
                 currentAnnotations.clear();
@@ -88,15 +86,11 @@ public class SortLinesByLengthCodeFormatter {
         StringBuilder result = new StringBuilder();
 
         for (Group group : groups) {
-            if (group.isBlankLine()) {
-                result.append("\n"); // Preserve blank lines
-            } else {
-                for (String annotation : group.annotations) {
-                    result.append(annotation).append("\n");
-                }
-                if (!group.fieldLine.isEmpty()) {
-                    result.append(group.fieldLine).append("\n");
-                }
+            for (String annotation : group.annotations) {
+                result.append(annotation).append("\n");
+            }
+            if (!group.fieldLine.isEmpty()) {
+                result.append(group.fieldLine).append("\n");
             }
         }
 
@@ -107,38 +101,10 @@ public class SortLinesByLengthCodeFormatter {
     private static class Group {
         List<String> annotations;
         String fieldLine;
-        boolean isBlankLine;
 
         private Group(List<String> annotations, String fieldLine) {
             this.annotations = annotations;
             this.fieldLine = fieldLine;
-            this.isBlankLine = false;
         }
-
-        private Group(boolean isBlankLine) {
-            this.annotations = new ArrayList<>();
-            this.fieldLine = "";
-            this.isBlankLine = isBlankLine;
-        }
-
-        static Group blankLine() {
-            return new Group(true);
-        }
-
-        boolean isBlankLine() {
-            return isBlankLine;
-        }
-    }
-
-    private static boolean isBlank(String str) {
-        int strLen;
-        if (str != null && (strLen = str.length()) != 0) {
-            for (int i = 0; i < strLen; ++i) {
-                if (!Character.isWhitespace(str.charAt(i))) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }
